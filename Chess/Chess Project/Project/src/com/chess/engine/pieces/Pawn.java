@@ -8,13 +8,14 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
+import com.google.common.collect.ImmutableList;
 
 public class Pawn extends Piece {
 
     private final static int[] CANDIDATE_MOVE_COORDINATE = {8,16};
 
     public Pawn(final Alliance pieceAlliance, final int piecePosition) {
-        super(piecePosition, pieceAlliance);
+        super(PieceType.PAWN,pieceAlliance, piecePosition);
     
     }
 
@@ -69,7 +70,17 @@ public class Pawn extends Piece {
 
             }
         }
-        return legalMoves;
+        return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public Pawn movePiece(final Move move) {
+        // TODO Auto-generated method stub
+        return new Pawn(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
     }
     
+    @Override
+    public String toString() {
+        return Piece.PieceType.PAWN.toString();
+    }
 }

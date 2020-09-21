@@ -13,14 +13,18 @@ import com.google.common.collect.ImmutableList;
 
 public class King extends Piece {
     
+    // CANDIDATE_MOVE_COORDINATE are the valid moves in which a king can move
+
     private final static int[] CANDIDATE_MOVE_COORDINATE = {-9,-8,-7,-1,1,7,8,9};
 
     public King(final Alliance pieceAlliance, final int piecePosition) {
-        super(piecePosition, pieceAlliance);
-        // TODO Auto-generated constructor stub
+        super(PieceType.KING, pieceAlliance, piecePosition);
     }
 
     @Override
+
+    //Calculates what moves are Legal for the king!
+
     public Collection<Move> calculateLegalMoves(Board board){
         
         final List<Move> legalMoves = new ArrayList<>();
@@ -57,7 +61,18 @@ public class King extends Piece {
 
         return ImmutableList.copyOf(legalMoves);
     }
+
+    @Override
+    public King movePiece(final Move move) {
+        return new King(move.getMovedPiece().getPieceAlliance(),move.getDestinationCoordinate());
+    }
+
+    @Override
+    public String toString() {
+        return Piece.PieceType.KING.toString();
+    }
     
+    //Methods check to see what moves are not legal for a King to make and does not allow them 
     private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset) {
         return BoardUtils.FIRST_COLUMN[currentPosition]
                 && (candidateOffset == -9 || candidateOffset == -1 || candidateOffset == 7);

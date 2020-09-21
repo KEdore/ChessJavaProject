@@ -1,5 +1,8 @@
 package com.chess.engine.board;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,18 +14,103 @@ import com.chess.engine.pieces.Pawn;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.pieces.Queen;
 import com.chess.engine.pieces.Rook;
+import com.chess.engine.player.BlackPlayer;
+import com.chess.engine.player.Player;
+import com.chess.engine.player.WhitePlayer;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 public class Board {
 
     private final List<Tile> gameBoard;
 
-    private Board(Builder builder){
+    private final Collection<Piece> whitePieces;
+    private final Collection<Piece> blackPieces;
+
+    private final WhitePlayer whitePlayer;
+    private final BlackPlayer blackPlayer;
+    private final Player currentPlayer;
+
+    private Board(final Builder builder){
         this.gameBoard = createGameBoard(builder);
+        this.whitePieces = calculateActivePieces(this.gameBoard,Alliance.WHITE);
+        this.blackPieces = calculateActivePieces(this.gameBoard, Alliance.BLACK);
+
+        final Collection<Move> whiteStandardLegalMoves = calculateLegalMoves(this.whitePieces);
+        final Collection<Move> blackStandardLegalMoves = calculateLegalMoves(this.blackPieces);
+        
+        this.whitePlayer = new WhitePlayer(this,whiteStandardLegalMoves,blackStandardLegalMoves);
+        this.blackPlayer = new BlackPlayer(this,whiteStandardLegalMoves,blackStandardLegalMoves);
+        this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer,this.blackPlayer);
     }
 
-        public Tile getTile(final int tileCoordinate){
-            return null;
+
+    @Override
+    public String toString(){
+        final StringBuilder builder = new StringBuilder();
+        for(int i = 0; i<BoardUtils.NUM_TILES; i++){
+            final String tileText = this.gameBoard.get(i).toString();
+            builder.append(String.format("%3s",tileText));
+            if((i + 1) % BoardUtils.NUM_TILES_PER_ROW == 0){
+                builder.append("\n");
+            }
+        }
+        return builder.toString();
+    }
+
+    public Player whitePlayer(){
+        return this.whitePlayer;
+    }
+
+    public Player blackPlayer(){
+        return this.blackPlayer;
+    }
+
+    public Player currentPlayer(){
+        return this.currentPlayer;
+    }
+
+
+    public Collection<Piece> getBlackPieces(){
+        return this.blackPieces;
+    }
+
+    public Collection<Piece> getWhitePieces() {
+        return this.whitePieces;
+    }
+
+        private static String prettyPrint(Tile tile) {
+            return tile.toString();
+    }
+
+    private Collection<Move> calculateLegalMoves(final Collection<Piece> pieces) {
+        
+            final List<Move> legalMoves = new ArrayList<>();
+
+            for(final Piece piece : pieces){
+                legalMoves.addAll(piece.calculateLegalMoves(this));
+            }
+            return ImmutableList.copyOf(legalMoves);
+    }
+
+    private static Collection<Piece> calculateActivePieces(final List<Tile> gameBoard, final Alliance alliance) {
+        
+        final List<Piece> activePieces = new ArrayList<>();
+        
+        for(final Tile tile: gameBoard){
+            if(tile.isTileOccupied()){
+                final Piece piece = tile.getPiece();
+                if(piece.getPieceAlliance() == alliance){
+                    activePieces.add(piece);
+                }
+            }
+        }
+        
+            return ImmutableList.copyOf(activePieces);
+    }
+
+    public Tile getTile(final int tileCoordinate) {
+            return gameBoard.get(tileCoordinate);
         }
 
         private static List<Tile> createGameBoard(final Builder builder){
@@ -75,6 +163,11 @@ public class Board {
                 return builder.build();
             } 
 
+            public Iterable<Move> getAllLegalMoves() {
+                return Iterables.unmodifiableIterable(
+                        Iterables.concat(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves()));
+            }
+
         //Builder Patter: The builder pattern provides a build object which is used to
         // construct a complex object called the product. It encapsulates the logic of
         // constructing the different pieces of the product.
@@ -83,9 +176,10 @@ public class Board {
             
             Map<Integer, Piece> boardConfig;
             Alliance nextMoveMaker;
+            Pawn enPassantPawn;
 
             public Builder(){
-
+                this.boardConfig = new HashMap<>();
             }
 
             public Builder setPiece(final Piece piece){
@@ -103,6 +197,11 @@ public class Board {
                 return new Board(this);
             }
 
+			public void setEnPassantPawn(Pawn enPassantPawn){
+                this.enPassantPawn = enPassantPawn;
+			}
+
     }
 
+		
 }
