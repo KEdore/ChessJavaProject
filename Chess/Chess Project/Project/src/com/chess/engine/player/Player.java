@@ -45,18 +45,20 @@ public abstract class Player {
         return ImmutableList.copyOf(attackMoves);
     }
 
+    
+
+    public King getPlayerKing() {
+        return this.playerKing;
+    }
+
     private King establishKing() {
-        for(final Piece piece: getActivePieces()){
-            if(piece.getPieceType().isKing()){
+        for (final Piece piece : getActivePieces()) {
+            if (piece.getPieceType().isKing()) {
                 return (King) piece;
             }
         }
 
         throw new RuntimeException("Should not reach here! Not a valid board!!");
-    }
-
-    public King getPlayerKing() {
-        return this.playerKing;
     }
 
     public Collection<Move> getLegalMoves() {
@@ -97,11 +99,13 @@ public abstract class Player {
 
     public MoveTransition makeMove(final Move move){
         
-        if(!isMoveLegal(move)){
+        if(!this.legalMoves.contains(move)){
             return new MoveTransition(this.board,move,MoveStatus.ILLEGAL_MOVE);
         }
 
         final Board transitionBoard = move.execute();
+        
+        
         
         final Collection<Move> kingAttacks = Player.calculateAttacksOnTile(transitionBoard.currentPlayer().getOpponent().getPlayerKing().getPiecePosition(),transitionBoard.currentPlayer().getLegalMoves());
         

@@ -187,7 +187,7 @@ public class Board {
                 return this;
             }
 
-            public Builder setMoveMaker(final Alliance alliance){
+            public Builder setMoveMaker(final Alliance nextMoveMaker){
                 this.nextMoveMaker = nextMoveMaker;
                 return this;
             }

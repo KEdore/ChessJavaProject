@@ -3,7 +3,7 @@ package com.chess.engine.player;
 public enum MoveStatus {
     DONE {
         @Override
-        boolean isDone() {
+        public boolean isDone() {
             // TODO Auto-generated method stub
             return true;
         }
@@ -11,7 +11,7 @@ public enum MoveStatus {
 
     ILLEGAL_MOVE{
         @Override
-        boolean isDone() {
+        public boolean isDone() {
             // TODO Auto-generated method stub
             return false;
         }
@@ -19,12 +19,12 @@ public enum MoveStatus {
     },
     LEAVES_PLAYER_IN_CHECK{
     @Override
-    boolean isDone() {
+    public boolean isDone() {
         // TODO Auto-generated method stub
         return false;
     }
     };
 
-    abstract boolean isDone();
+    public abstract boolean isDone();
 
 }
