@@ -2,6 +2,7 @@ package com.chess.engine.player;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.chess.engine.Alliance;
@@ -10,7 +11,6 @@ import com.chess.engine.board.Move;
 import com.chess.engine.board.Tile;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.pieces.Rook;
-import com.google.common.collect.ImmutableList;
 
 public class WhitePlayer extends Player {
 
@@ -35,6 +35,11 @@ public class WhitePlayer extends Player {
     public Player getOpponent() {
         // TODO Auto-generated method stub
         return this.board.blackPlayer();
+    }
+
+    @Override
+    public String toString() {
+        return Alliance.WHITE.toString();
     }
 
     @Override
@@ -72,7 +77,7 @@ public class WhitePlayer extends Player {
 
         }
     
-        return ImmutableList.copyOf(kingCastles);
+        return Collections.unmodifiableList(kingCastles);
     }
 
 

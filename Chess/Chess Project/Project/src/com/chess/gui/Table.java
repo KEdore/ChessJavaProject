@@ -122,7 +122,7 @@ public class Table {
                 tilePanel.drawTile(board);
                 add(tilePanel);
             }
-            validate();;
+            validate();
             repaint();
         }
 
@@ -145,14 +145,19 @@ public class Table {
                 public void mouseClicked(final MouseEvent e) {
 
                     if (isRightMouseButton(e)) {
+                        
                         sourceTile = null;
+                        
                         destinationTile = null;
                         humanMovedPiece = null;
                     } else if (isLeftMouseButton(e)) {
+                        
+                        
                         if (sourceTile == null){
                         sourceTile = chessBoard.getTile(tileId);
                         humanMovedPiece = sourceTile.getPiece();
-                            if (humanMovedPiece == null) {
+                           
+                        if (humanMovedPiece == null) {
                                 sourceTile = null;
                         }
                     } else {
@@ -161,6 +166,7 @@ public class Table {
                                 destinationTile.getTileCoordinate());
                         final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
                         if (transition.getMoveStatus().isDone()) {
+                            System.out.println("miscare facuta");
                             chessBoard = transition.getTransitionBoard();
                             //TODO add the move that was made to the move log
                                 }
@@ -173,6 +179,7 @@ public class Table {
                             @Override
                             public void run() {
                                 // TODO Auto-generated method stub
+                                System.out.println("desenez");
                                 boardPanel.drawBoard(chessBoard);
                             }
                                  
@@ -182,25 +189,25 @@ public class Table {
 
 				@Override
 				public void mousePressed(final MouseEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 
 				@Override
 				public void mouseReleased(final MouseEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 
 				@Override
 				public void mouseEntered(final MouseEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 
 				@Override
 				public void mouseExited(final MouseEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 
@@ -211,13 +218,13 @@ public class Table {
         public void drawTile(final Board board){
             assignTileColor();
             assignTilePieceIcon(board);
-            validate();;
+            validate();
             repaint();
         }
 
         private void assignTilePieceIcon(final Board board) {
             this.removeAll();
-            if (board.getTile(this.tileId).isTileOccupied()) {
+            if (board.getTile(this.tileId).isTileOccupied()){
                 try {
                     final BufferedImage image = ImageIO.read(new File(defaultPieceImagesPath + board.getTile(this.tileId).getPiece().getPieceAlliance().toString().substring(0, 1) + board.getTile(this.tileId).getPiece().toString() + ".gif"));
                         add(new JLabel(new ImageIcon(image)));

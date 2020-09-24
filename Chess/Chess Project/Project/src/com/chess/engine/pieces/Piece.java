@@ -14,21 +14,24 @@ public abstract class Piece {
     protected final boolean isFirstMove;
     private final int cachedHashCode;
  
-    public Piece(final PieceType pieceType,final Alliance pieceAlliance, final int piecePosition){
+    public Piece(final PieceType pieceType,final Alliance pieceAlliance, final int piecePosition,final boolean isFirstMove){
         this.pieceAlliance = pieceAlliance;
         this.piecePosition = piecePosition;
         this.pieceType = pieceType;
-        //TODO work here
-        this.isFirstMove = false;
+        this.isFirstMove = isFirstMove;
         this.cachedHashCode = computeHashCode();
     }
-    
-    private int computeHashCode() {
+
+	private int computeHashCode() {
         int result = pieceType.hashCode();
         result = 31 * result + pieceAlliance.hashCode();
         result = 31 * result + piecePosition;
         result = 31 * result + (isFirstMove ? 1 : 0);
         return result;
+    }
+
+    public boolean isFirstMove() {
+        return this.isFirstMove;
     }
 
     @Override
@@ -58,9 +61,6 @@ public abstract class Piece {
         return this.pieceAlliance;
     }
     
-    public boolean isFirstMove(){
-        return this.isFirstMove;
-    }
 
     public PieceType getPieceType(){
         return this.pieceType;
