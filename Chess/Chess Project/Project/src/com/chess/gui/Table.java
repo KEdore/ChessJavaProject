@@ -363,7 +363,7 @@ public class Table {
                 for(final Move move: pieceLegalMoves(board)){
                     if(move.getDestinationCoordinate() == this.tileId){
                         try{
-                            add(new JLabel(new ImageIcon(ImageIO.read(new File("art/Misc/green_dot.png")))));
+                            add(new JLabel(new ImageIcon(ImageIO.read(new File("art/Misc/green_dot.png/")))));
                         }catch(Exception e){
                             e.printStackTrace();
                         }
